@@ -1,2 +1,4 @@
-# baby-connect
-React based social network
+# basic-blog
+
+React based blog with Shaun
+
