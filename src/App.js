@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css';
 import HomePage from './pages/home';
 import About from './pages/about';
+import ArticlePage from './pages/article';
+import ArticleListPage from './pages/article-list-page';
 import Err404 from './pages/err404';
 
 function App() {
@@ -12,6 +14,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage/>} exact />
             <Route path="/about" element={<About/>} />
+            <Route path="/article-list-page" element={<ArticleListPage/>} />
+            <Route path="/article/:name" element={<ArticlePage/>} />
             <Route path='*' element={<Err404/>} />
           </Routes>
         </div>
