@@ -10,8 +10,6 @@ const ArticlePage = () => {
   if(!article) return <Err404 />
   const otherArticles = articleContent.filter(a => a.name !== name)
 
-  if(!article) return <h1>Article '{ name }' does not exist..</h1>
-  
   return (
     <>
       <h1>{ article.title }</h1>
