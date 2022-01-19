@@ -1,9 +1,13 @@
 import express from 'express'
+import User from './model/user'
+import Article from './model/article'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
+require('./database-connection')
 
 const articleInfo = {
   'learn-react': {
@@ -20,10 +24,55 @@ const articleInfo = {
   }
 }
 
-// Setting up the requests
-// app.get('/hello', (req, res) => res.send('Hi there'))
-// app.get('/hello/:name', (req, res) => res.send(`Hi ${req.params.name}`))
-// app.post('/hello', (req, res) => res.send(`Hello ${req.body.name}. You ok?`))
+async function main (){
+
+  const u1 = new User ({
+    name: 'Serhat',
+    email: 's@rhat.com',
+    comments: [],
+    upvotes: []
+  }) 
+  await u1.save()
+
+  const u2 = new User ({
+    name: 'Sevim',
+    email: 's@vim.com',
+    comments: [],
+    upvotes: []
+  })
+  await u2.save()
+
+  const u3 = new User ({
+    name: 'Simone',
+    email: 'sim@ne.com',
+    comments: [],
+    upvotes: []
+  })
+  await u3.save()
+
+  const a1 = new Article({
+    name: 'learn-react',
+    upvotes: 0,
+    comments: []
+  })
+  await a1.save()
+
+  const a2 = new Article({
+    name: 'learn-node',
+    upvotes: 0,
+    comments: []
+  })
+  await a2.save()
+
+  const a3 = new Article({
+    name: 'become-a-jr',
+    upvotes: 0,
+    comments: []
+  })
+  await a3.save()
+}
+
+main()
 
 // Post request for upvoting the articles
 app.post('/api/articles/:name/upvote', (req, res) => {
