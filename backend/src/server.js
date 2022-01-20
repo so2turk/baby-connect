@@ -9,7 +9,7 @@ app.use(express.urlencoded({extended:true}))
 
 require('./database-connection')
 
-async function main (){
+app.get('/initialize', async (req, res)=>{
 
   const u1 = await User.create ({
     name: 'Serhat',
@@ -56,9 +56,9 @@ async function main (){
   await u1.addComment(a3, 'Amazing.. unbelivable')
   await u2.addComment(a2, 'Not that I expected.. could be better!')
   await u3.addComment(a1, 'Agu.. agu..')
-}
 
-main()
+  res.sendStatus(200)
+})
 
 // Post request for upvoting the articles
 app.post('/api/articles/:name/upvote', async (req, res) => {
@@ -66,7 +66,7 @@ app.post('/api/articles/:name/upvote', async (req, res) => {
   const user = await User.findOne({ name:req.body.name })
 
   await user.upvoteArticle(article)
-  res.sendStatus(200).send(article.upvotes)
+  res.sendStatus(200)
 })
 
 // Post request for adding comment
@@ -76,7 +76,7 @@ app.post('/api/articles/:name/add-comment', async (req, res) => {
   const article = await Article.findOne({ name:req.params.name })
 
   user.addComment(article, text)
-  res.sendStatus(200).send(article)
+  res.sendStatus(200)
 })
 
 app.listen(8000, () => console.log('Listening on port 8000'))
