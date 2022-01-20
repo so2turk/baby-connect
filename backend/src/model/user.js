@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
 
 class User {
   async upvoteArticle(article){
-    article.upvote += 1
+    article.upvotes += 1
     this.upvotes.push(article.name)
 
     await article.save()

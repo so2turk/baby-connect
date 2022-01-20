@@ -9,83 +9,74 @@ app.use(express.urlencoded({extended:true}))
 
 require('./database-connection')
 
-const articleInfo = {
-  'learn-react': {
-    upvotes : 0,
-    comments: []
-  },
-  'learn-node': {
-    upvotes : 0,
-    comments: []
-  },
-  'become-a-jr': {
-    upvotes : 0,
-    comments: []
-  }
-}
-
 async function main (){
 
-  const u1 = new User ({
+  const u1 = await User.create ({
     name: 'Serhat',
     email: 's@rhat.com',
     comments: [],
     upvotes: []
-  }) 
-  await u1.save()
+  })
 
-  const u2 = new User ({
+  const u2 = await User.create ({
     name: 'Sevim',
     email: 's@vim.com',
     comments: [],
     upvotes: []
   })
-  await u2.save()
 
-  const u3 = new User ({
+  const u3 = await User.create ({
     name: 'Simone',
     email: 'sim@ne.com',
     comments: [],
     upvotes: []
   })
-  await u3.save()
 
-  const a1 = new Article({
+  const a1 = await Article.create ({
     name: 'learn-react',
     upvotes: 0,
     comments: []
   })
-  await a1.save()
 
-  const a2 = new Article({
+  const a2 = await Article.create ({
     name: 'learn-node',
     upvotes: 0,
     comments: []
   })
-  await a2.save()
 
-  const a3 = new Article({
+  const a3 = await Article.create ({
     name: 'become-a-jr',
     upvotes: 0,
     comments: []
   })
-  await a3.save()
+
+  await u1.upvoteArticle(a3)
+  await u2.upvoteArticle(a2)
+  await u3.upvoteArticle(a1)
+  await u1.addComment(a3, 'Amazing.. unbelivable')
+  await u2.addComment(a2, 'Not that I expected.. could be better!')
+  await u3.addComment(a1, 'Agu.. agu..')
 }
 
 main()
 
 // Post request for upvoting the articles
-app.post('/api/articles/:name/upvote', (req, res) => {
-  const articleName = req.params.name
-  articleInfo[articleName].upvotes += 1
-  res.status(200).send(`${articleName} now has ${articleInfo[articleName].upvotes} upvotes.`)
+app.post('/api/articles/:name/upvote', async (req, res) => {
+  const article = await Article.findOne({ name:req.params.name })
+  const user = await User.findOne({ name:req.body.name })
+
+  await user.upvoteArticle(article)
+  res.sendStatus(200).send(article.upvotes)
 })
 
-app.post('/api/articles/:name/add-comment', (req, res) => {
-  const { username, text } = req.body
-  const articleName = req.params.name
-  articleInfo[articleName].comments.push({ username, text })
-  res.status(200).send(articleInfo[articleName])
+// Post request for adding comment
+app.post('/api/articles/:name/add-comment', async (req, res) => {
+  const user = await User.findOne({ name:req.body.name })
+  const text = req.body.text
+  const article = await Article.findOne({ name:req.params.name })
+
+  user.addComment(article, text)
+  res.sendStatus(200).send(article)
 })
 
 app.listen(8000, () => console.log('Listening on port 8000'))
