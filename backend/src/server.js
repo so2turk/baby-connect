@@ -79,4 +79,11 @@ app.post('/api/articles/:name/add-comment', async (req, res) => {
   res.sendStatus(200)
 })
 
+// Get request for fetching article's info
+app.get('/api/articles/:name', async (req, res) => {
+  const article = await Article.findOne({ name:req.params.name })
+
+  res.send(article)
+})
+
 app.listen(8000, () => console.log('Listening on port 8000'))
