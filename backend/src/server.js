@@ -11,6 +11,12 @@ require('./database-connection')
 
 app.get('/initialize', async (req, res)=>{
 
+  const u0 = await User.create ({
+    name: 'Anonymous',
+    email: 'an@n.com',
+    comments: [],
+    upvotes: []
+  })
   const u1 = await User.create ({
     name: 'Serhat',
     email: 's@rhat.com',
@@ -60,13 +66,22 @@ app.get('/initialize', async (req, res)=>{
   res.sendStatus(200)
 })
 
-// Post request for upvoting the articles
+// Post request for upvoting the articles with user info
 app.post('/api/articles/:name/upvote', async (req, res) => {
   const article = await Article.findOne({ name:req.params.name })
   const user = await User.findOne({ name:req.body.name })
 
   await user.upvoteArticle(article)
   res.sendStatus(200)
+})
+
+// Post request for upvoting the articles without user info
+app.post('/api/articles/:name/upvotes', async (req, res) => {
+  const article = await Article.findOne({ name:req.params.name })
+
+  article.upvotes += 1
+  await article.save()
+  res.send(article)
 })
 
 // Post request for adding comment
