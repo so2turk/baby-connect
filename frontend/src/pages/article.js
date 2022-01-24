@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import articleContent from './article-content'
 import ArticlesList from "../components/articles-list";
 import Err404 from "./err404";
+import CommentsList from '../components/comments-list'
+import Upvoting from "../components/upvoting";
+import AddCommentForm from "../components/add-comment-form";
 
 const ArticlePage = () => {
   const { name } = useParams()
@@ -10,10 +13,10 @@ const ArticlePage = () => {
 
   const [ articleInfo, setArticleInfo ] = useState({ upvotes: 0, comments: [] })
   useEffect(() => {
-    // setArticleInfo({ upvotes: Math.ceil(Math.random() * 10) })
     const fetchData = async () => {
       const result = await fetch(`/api/articles/${name}`)
       const body = await result.json()
+      
       setArticleInfo(body)
     }
     fetchData()
@@ -25,10 +28,12 @@ const ArticlePage = () => {
   return (
     <>
       <h1>{ article.title }</h1>
-      <p>This article has been upvoted {articleInfo.upvotes} times.</p>
+      <Upvoting articleName={name} upvotes={articleInfo.upvotes} setArticleInfo={setArticleInfo}/>
       { article.content.map((paragraph, key) => {
         return <p key={ key }>{ paragraph }</p>
       })}
+      <CommentsList comments={ articleInfo.comments } />
+      <AddCommentForm articleName={name} setArticleInfo={setArticleInfo} />
       <h3>Other Articles</h3>
       <ArticlesList articles={ otherArticles } />
     </>

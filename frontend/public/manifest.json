@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Basic Blog",
+  "name": "Basic Blog - A blog to show that I can blog :)",
   "icons": [
     {
       "src": "favicon.ico",
