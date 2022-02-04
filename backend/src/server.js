@@ -1,13 +1,13 @@
 import express from 'express'
-import User from './model/user'
-import Article from './model/article'
+import User from './model/user.js'
+import Article from './model/article.js'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-require('./database-connection')
+import('./database-connection.js')
 
 app.get('/initialize', async (req, res)=>{
 
