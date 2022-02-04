@@ -9,6 +9,8 @@ app.use(express.urlencoded({extended:true}))
 
 import('./database-connection.js')
 
+const port = process.env.PORT || 8000
+
 app.get('/initialize', async (req, res)=>{
 
   const u0 = await User.create ({
@@ -101,4 +103,7 @@ app.get('/api/articles/:name', async (req, res) => {
   res.send(article)
 })
 
-app.listen(8000, () => console.log('Listening on port 8000'))
+app.get("/", (req, res) => {
+  res.send("lol")
+})
+app.listen(port, () => console.log(`Listening on port ${port}`))
