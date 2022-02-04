@@ -1,0 +1,29 @@
+version: "3"
+services:
+  frontend:
+    image: bblog-frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+  backend:
+    image: bblog-backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_USERNAME=username
+      - MONGODB_PASSWORD=pass
+      - MONGODB_DATABASE=database
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend/src:/app/src
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
