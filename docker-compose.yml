@@ -6,10 +6,14 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3000
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`bblog.localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
   backend:
     image: bblog-backend
     build:
@@ -20,10 +24,26 @@ services:
       - MONGODB_PASSWORD=pass
       - MONGODB_DATABASE=database
     ports:
-      - 8000:8000
+      - 3000
     volumes:
       - ./backend/src:/app/src
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=(Host(`bblog.localhost`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.backend.entrypoints=web"
   mongo:
     image: mongo
     ports:
       - 27017:27017
+  load-balancer:
+    image: traefik:v2.2
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

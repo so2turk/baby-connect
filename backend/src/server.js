@@ -9,7 +9,7 @@ app.use(express.urlencoded({extended:true}))
 
 import('./database-connection.js')
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 3000
 
 app.get('/initialize', async (req, res)=>{
 
