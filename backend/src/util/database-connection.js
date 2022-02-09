@@ -16,7 +16,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('connection established'))
+  .then(() => console.log('Connection established'))
   .catch(console.log)
 
 export default mongoose.connection
