@@ -13,4 +13,4 @@ const articleSchema = new mongoose.Schema({
 class Article { }
 
 articleSchema.loadClass(Article)
-module.exports = mongoose.model('Article', articleSchema)
+export default mongoose.model('Article', articleSchema)
