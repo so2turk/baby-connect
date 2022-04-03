@@ -2,26 +2,52 @@ import mongoose from 'mongoose'
 import autopopulate from 'mongoose-autopopulate'
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  comments: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Article',
-    autopopulate: { maxDepth:1 }
-  }],
-  upvotes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Article',
-    autopopulate: { maxDepth:1}
-  }]
+	email: {
+		type: String,
+		unique: true,
+		required: true,
+		max: 50,
+	},
+	userName: {
+		type: String,
+		unique: true,
+		required: true,
+		min: 3,
+		max: 10,
+	},
+	password: {
+		type: String,
+		required: true,
+		min: 6,
+	},
+	articles: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Article',
+			autopopulate: { maxDepth: 1 },
+		},
+	],
+	comments: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Comment',
+			autopopulate: { maxDepth: 1 },
+		},
+	],
+	likes: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Article',
+			autopopulate: { maxDepth: 1 },
+		},
+	],
+	upvotes: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Comment',
+			autopopulate: { maxDepth: 1 },
+		},
+	],
 })
 
 class User {
