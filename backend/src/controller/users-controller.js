@@ -1,8 +1,19 @@
 import User from '../model/user'
+import bcyrpt from 'bcrypt'
+
+const saltRounds = 10
 
 export const createUser = async (req, res) => {
-	const userToCreate = User(req.params)
 	try {
+		const salt = await bcyrpt.genSalt(saltRounds)
+		const hashedPass = await bcyrpt.hash(req.body.password, salt)
+
+		const userToCreate = new User({
+			email: req.body.email,
+			userName: req.body.userName,
+			password: hashedPass,
+		})
+
 		const newUser = await userToCreate.save()
 		res.status(200).json(newUser)
 	} catch (err) {
