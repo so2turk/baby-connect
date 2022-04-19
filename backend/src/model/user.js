@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		min: 6,
 	},
+	isAdmin: {
+		type: Boolean,
+		required: true,
+	},
 	articles: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
