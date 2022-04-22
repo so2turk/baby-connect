@@ -1,12 +1,10 @@
 import mongoose from 'mongoose'
-import Comment from './comment'
-import User from './user'
 
 const articleSchema = new mongoose.Schema({
 	author: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: User,
+			ref: 'User',
 			autopopulate: { maxDepth: 1 },
 		},
 	],
@@ -33,13 +31,13 @@ const articleSchema = new mongoose.Schema({
 	likes: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: User,
+			ref: 'User',
 		},
 	],
 	comments: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: Comment,
+			ref: 'Comment',
 		},
 	],
 })
