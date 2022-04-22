@@ -1,6 +1,6 @@
-import User from '../model/user'
-import { genAccessToken } from '../util/auth'
+import User from '../model/user.js'
 import bcrypt from 'bcryptjs'
+import { genAccessToken, genRefreshToken } from '../util/auth.js'
 
 const saltRounds = 10
 
