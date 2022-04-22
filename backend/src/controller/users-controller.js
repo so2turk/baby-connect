@@ -2,24 +2,35 @@ import User from '../model/user.js'
 import bcrypt from 'bcryptjs'
 import { genAccessToken, genRefreshToken } from '../util/auth.js'
 
-const saltRounds = 10
+const saltRounds = 11
 
 export const createUser = async (req, res) => {
-	try {
-		const salt = await bcyrpt.genSalt(saltRounds)
-		const hashedPass = await bcyrpt.hash(req.body.password, salt)
+	const { userName, email, password } = req.body
 
-		const userToCreate = new User({
-			email: req.body.email,
-			userName: req.body.userName,
+	try {
+		if (!userName || !email || !password)
+			return res.status(400).json('Please add all fields')
+
+		const userExists = await User.findOne({ email: email })
+		if (userExists) return res.status(400).json('User already exists')
+
+		const salt = await bcrypt.genSalt(saltRounds)
+		const hashedPass = await bcrypt.hash(password, salt)
+
+		const newUser = await User.create({
+			email,
+			userName,
 			password: hashedPass,
 			isAdmin: false,
 		})
 
-		const newUser = await userToCreate.save()
-		res.status(200).json(newUser)
+		res.status(200).json({
+			id: newUser._id,
+			userName: newUser.userName,
+			accessToken: genAccessToken(newUser),
+		})
 	} catch (err) {
-		res.status(500).json({ msg: 'something went wrong', eMsg: err.message })
+		res.status(500).json({ msg: 'Something went wrong', eMsg: err.message })
 	}
 }
 
