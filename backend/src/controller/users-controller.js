@@ -35,19 +35,23 @@ export const createUser = async (req, res) => {
 }
 
 export const login = async (req, res) => {
+	const { email, password } = req.body
+
 	try {
-		const user = await User.findOne({ email: req.body.email })
-		if (!user) return res.status(400).json('wrong email or password')
+		if (!email || !password)
+			return res.status(400).json('Please add all fields')
 
-		const validPass = await bcrypt.compare(req.body.password, user.password)
-		if (!validPass) return res.status(400).json('wrong email or password')
+		const user = await User.findOne({ email })
+		if (!user) return res.status(400).json('Wrong email or password')
 
-		const accessToken = genAccessToken(user)
+		const validPass = await bcrypt.compare(password, user.password)
+		if (!validPass) return res.status(400).json('Wrong email or password1')
+
+		// const refreshToken = genRefreshToken(user)
 
 		res.status(200).json({
-			accessToken,
 			userName: user.userName,
-			isAdmin: user.isAdmin,
+			accessToken: genAccessToken(user._id, user.isAdmin),
 		})
 	} catch (err) {
 		res.status(500).json(err)
