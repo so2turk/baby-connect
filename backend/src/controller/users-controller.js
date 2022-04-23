@@ -69,7 +69,11 @@ export const userDetails = async (req, res) => {
 export const getUser = async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId)
-		if (user) res.status(200).json(user)
+		if (user)
+			res.status(200).json({
+				userName: user.userName,
+				isAdmin: user.isAdmin,
+			})
 		else res.status(400).json('No such user')
 	} catch (err) {
 		res.status(500).json({ msg: 'something went wrong', eMsg: err.message })
