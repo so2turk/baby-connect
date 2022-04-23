@@ -58,6 +58,14 @@ export const login = async (req, res) => {
 	}
 }
 
+export const userDetails = async (req, res) => {
+	try {
+		res.status(200).json(req.user)
+	} catch (err) {
+		res.status(500).json({ msg: 'something went wrong', eMsg: err.message })
+	}
+}
+
 export const getUser = async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId)
