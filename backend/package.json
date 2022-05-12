@@ -1,8 +1,9 @@
 {
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.2",
-    "mongoose": "^6.1.7",
-    "mongoose-autopopulate": "^0.16.0"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.7"
   },
   "name": "backend",
   "version": "0.0.1",

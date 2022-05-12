@@ -1,28 +1,62 @@
 import mongoose from 'mongoose'
-import autopopulate from 'mongoose-autopopulate'
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  comments: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Article',
-    autopopulate: { maxDepth:1 }
-  }],
-  upvotes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Article',
-    autopopulate: { maxDepth:1}
-  }]
-})
+const userSchema = new mongoose.Schema(
+	{
+		email: {
+			type: String,
+			unique: true,
+			required: [true, 'Please add an email'],
+			max: 50,
+		},
+		userName: {
+			type: String,
+			unique: true,
+			required: [true, 'Please add a user name'],
+			min: 3,
+			max: 10,
+		},
+		password: {
+			type: String,
+			required: [true, 'Please add a password'],
+			min: 6,
+		},
+		isAdmin: {
+			type: Boolean,
+			required: true,
+		},
+		articles: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Article',
+				// autopopulate: { maxDepth: 1 },
+			},
+		],
+		comments: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Comment',
+			},
+		],
+		likes: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Article',
+			},
+		],
+		upvotes: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Comment',
+			},
+		],
+		refreshToken: {
+			type: String,
+		},
+	},
+	{
+		timestamps: true,
+	}
+)
 
 class User {
   async upvoteArticle(article){
@@ -43,5 +77,4 @@ class User {
 }
 
 userSchema.loadClass(User)
-userSchema.plugin(autopopulate)
 export default mongoose.model('User', userSchema)
