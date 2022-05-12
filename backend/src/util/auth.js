@@ -39,3 +39,23 @@ export const verify = (req, res, next) => {
 		next()
 	})
 }
+
+export const verifyToken = async (req, res, next) => {
+	const cookies = req.cookies
+
+	if (!cookies?.jwtRefresh)
+		return res.status(401).send('Authorization failed: no token provided')
+	const refreshToken = cookies.jwtRefresh
+
+	const user = await User.findOne({ refreshToken })
+	if (!user)
+		return res.status(403).send('Authorization failed: token is not valid')
+
+	jwt.verify(refreshToken, refreshTokenKey, (err, decodedUser) => {
+		if (err || user._id.toString() !== decodedUser.id)
+			return res.status(403).send('Authorization failed: token is not valid')
+
+		req.user = user
+		next()
+	})
+}
