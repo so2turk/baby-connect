@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../model/user.js'
 const accessTokenKey = process.env.ACCESS_TOKEN_KEY
+const refreshTokenKey = process.env.REFRESH_TOKEN_KEY
 
 export const genAccessToken = (date, user) => {
 	return jwt.sign(
@@ -15,6 +16,10 @@ export const genAccessToken = (date, user) => {
 			expiresIn: '10s',
 		}
 	)
+}
+
+export const genRefreshToken = (date) => {
+	return jwt.sign({ date: date }, refreshTokenKey, { expiresIn: '1d' })
 }
 
 export const verify = (req, res, next) => {
